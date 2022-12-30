@@ -132,3 +132,5 @@ dmypy.json
 apikey.py
 working/
 final*
+.vercel
+*.pyc
