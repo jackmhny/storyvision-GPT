@@ -9,7 +9,7 @@ from apikey import apikey
 
 openai.api_key = apikey
 
-screen_width = 1024
+screen_width = 256
 screen_size = (screen_width, screen_width)
 
 # Clear then create working directories
@@ -29,7 +29,7 @@ def write_story(story_idea):
     full_prompt = f"Write a short story about the following: {story_idea}"
     # Call openai to complete story
     completions = openai.Completion.create(
-        model="text-davinci-003",
+        model="text-babbage-001",
         prompt=full_prompt,
         max_tokens=256,
         temperature=0.6
@@ -73,7 +73,7 @@ def generate(story_idea):
         audio_duration = audio_clip.duration
         image_clip = ImageClip(image).set_duration(audio_duration)
         text_clip = TextClip(
-            chunk, size=screen_size, color="white", stroke_color="black", stroke_width=2, method="caption"
+            chunk, size=screen_size, color="white", stroke_color="black", stroke_width=1, method="caption"
         )
         text_clip = text_clip.set_position('center').set_duration(audio_duration)
         audio_image_clip = image_clip.set_audio(audio_clip)
