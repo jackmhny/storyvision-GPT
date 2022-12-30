@@ -67,13 +67,14 @@ def generate(story_idea):
     chunked_story = re.split(r"[,.]", story)
     clips = []
     for ix, chunk in enumerate(chunked_story[:-1]):
+        chunk = chunk.strip()
         image = create_image(ix, chunk)
         audio_filepath = gen_audio(ix, chunk)
         audio_clip = AudioFileClip(audio_filepath)
         audio_duration = audio_clip.duration
         image_clip = ImageClip(image).set_duration(audio_duration)
         text_clip = TextClip(
-            chunk, size=screen_size, color="white", stroke_color="black", stroke_width=1, method="caption"
+            chunk, size=screen_size, color="white", stroke_color="black", font="Liberation-Mono", stroke_width=1, method="caption"
         )
         text_clip = text_clip.set_position('center').set_duration(audio_duration)
         audio_image_clip = image_clip.set_audio(audio_clip)

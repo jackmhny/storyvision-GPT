@@ -17,6 +17,6 @@
   </form>
   <hr>
   {% if result %}
-  <video height="400px" src="{{ url_for('static', filename=result) }}"></video>
+  <video height="400px" controls src="{{ url_for('static', filename=result) }}"></video>
   {% endif %}
 </body>
