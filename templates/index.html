@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<head>
+  <title>OpenAI Quickstart</title>
+  <!-- <link
+    rel="shortcut icon"
+    href="{{ url_for('static', filename='dog.png') }}"
+    /> -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
+</head>
+
+<body>
+  <!-- <img src="{{ url_for('static', filename='dog.png') }}" class="icon" /> -->
+  <h3>Story Generator</h3>
+  <form action="/" method="post">
+    <input type="text" name="story_idea" placeholder="Give an idea for a story:" required />
+    <input type="submit" value="Generate" />
+  </form>
+  <hr>
+  {% if result %}
+  <video height="400px" src="{{ url_for('static', filename=result) }}"></video>
+  {% endif %}
+</body>
