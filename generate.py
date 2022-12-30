@@ -9,7 +9,8 @@ from apikey import apikey
 
 openai.api_key = apikey
 
-screen_size = (1024, 1024)
+screen_width = 1024
+screen_size = (screen_width, screen_width)
 
 # Clear then create working directories
 working_dir = './working/'
@@ -48,7 +49,7 @@ def create_image(ix, chunk):
         image_url = dalle_response['data'][0]['url']
         image = urllib.request.urlretrieve(image_url)[0]
     except openai.error.InvalidRequestError:  # If DALL E refuses prompt
-        image = np.full(screen_size, 0, dtype=np.uint8)
+        image = np.full((screen_size[0],screen_size[1],3), 0, dtype=np.uint8)
     return image
 
 
