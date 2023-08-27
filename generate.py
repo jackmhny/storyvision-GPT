@@ -1,6 +1,5 @@
 import re
 import urllib.request
-import os
 import numpy as np
 import openai
 from gtts import gTTS
@@ -20,7 +19,7 @@ for root, dirs, files in os.walk(working_dir, topdown=False):
         os.remove(os.path.join(root, name))
     for name in dirs:
         os.rmdir(os.path.join(root, name))
-sub_working_dirs = ['audio', 'images', 'videos']
+sub_working_dirs = ['audio', 'image', 'video']
 for sub_working_dir in sub_working_dirs:
     os.makedirs(working_dir + sub_working_dir)
 
@@ -40,6 +39,7 @@ def write_story(story_idea):
 
 # Call DALL E for image and return
 def create_image(ix, chunk):
+    image_filepath = f"working/image/image{ix:03}.jpg"
     try:
         dalle_response = openai.Image.create(
             prompt=chunk.strip(),
@@ -48,18 +48,20 @@ def create_image(ix, chunk):
         )
         # Fetch and save image
         image_url = dalle_response['data'][0]['url']
-        image = urllib.request.urlretrieve(image_url)[0]
+        print("IMAGE URL:", image_url)
+        urllib.request.urlretrieve(image_url, image_filepath)
     except openai.error.InvalidRequestError:  # If DALL E refuses prompt
         image = np.full((screen_size[0],screen_size[1],3), 0, dtype=np.uint8)
-    return image
+        imageio.imwrite(image_filepath, image)
+    return image_filepath
 
 
 # Call gTTS for audio and return
 def gen_audio(ix, chunk):
-    filepath = f"working/audio/voiceover{ix:03}.mp3"
+    audio_filepath = f"working/audio/voiceover{ix:03}.mp3"
     tts = gTTS(text=chunk, lang='en', slow=False)
-    tts.save(filepath)
-    return filepath
+    tts.save(audio_filepath)
+    return audio_filepath
 
 
 def generate(story_idea):
@@ -69,11 +71,11 @@ def generate(story_idea):
     clips = []
     for ix, chunk in enumerate(chunked_story[:-1]):
         chunk = chunk.strip()
-        image = create_image(ix, chunk)
+        image_filepath = create_image(ix, chunk)
         audio_filepath = gen_audio(ix, chunk)
         audio_clip = AudioFileClip(audio_filepath)
         audio_duration = audio_clip.duration
-        image_clip = ImageClip(image).set_duration(audio_duration)
+        image_clip = ImageClip(image_filepath).set_duration(audio_duration)
         text_clip = TextClip(
             chunk, size=screen_size, color="white", stroke_color="black", font="Liberation-Mono", stroke_width=1, method="caption"
         )
